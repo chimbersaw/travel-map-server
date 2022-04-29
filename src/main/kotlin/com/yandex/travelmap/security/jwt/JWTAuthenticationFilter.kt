@@ -42,8 +42,10 @@ class JWTAuthenticationFilter(
             .sign(Algorithm.HMAC512(jwtSecret))
         userService.updateToken(user.username, token)
         val cookie = Cookie(AUTH_COOKIE, token)
-//        cookie.secure = true
+        cookie.secure = true
         response.addCookie(cookie)
+        val header = response.getHeader(HttpHeaders.SET_COOKIE)
+        response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None"))
         chain.doFilter(request, response)
     }
 }
