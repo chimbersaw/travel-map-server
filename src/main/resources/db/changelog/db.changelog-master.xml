@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <preConditions>
+        <dbms type="postgresql"/>
+    </preConditions>
+
+    <changeSet id="create_initial_db_schema" author="salkaevruslan">
+        <tagDatabase tag="db_init"/>
+    </changeSet>
+
+    <include file="classpath:/db/changelog/changes/init-tables/db.changelog-init-tables.xml"/>
+
+    <include file="classpath:/db/changelog/changes/update-user/db.changelog-update-user.xml"/>
+
+    <include file="classpath:/db/changelog/changes/add-token-to-users/db.changelog-add-token-to-users.xml"/>
+
+    <include file="classpath:/db/changelog/changes/create-confirmation-token-table/db.changelog-create-confirmation-token-table.xml"/>
+
+    <include file="classpath:/db/changelog/changes/add-cities-data/db.changelog-add-cities-data.xml"/>
+
+    <include file="classpath:/db/changelog/changes/update-countries-data/db.changelog-update-countries-data.xml"/>
+
+    <include file="classpath:/db/changelog/changes/add-friends/db.changelog-add-friends-table.xml"/>
+
+    <include file="classpath:/db/changelog/changes/add-desired-countries/db.changelog-add-desired.xml"/>
+</databaseChangeLog>
