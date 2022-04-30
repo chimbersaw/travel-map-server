@@ -26,4 +26,6 @@
     <include file="classpath:/db/changelog/changes/add-friends/db.changelog-add-friends-table.xml"/>
 
     <include file="classpath:/db/changelog/changes/add-desired-countries/db.changelog-add-desired.xml"/>
+
+    <include file="classpath:/db/changelog/changes/update-cities-data/db.changelog-update-cities-data.xml"/>
 </databaseChangeLog>
