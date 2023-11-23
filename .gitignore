@@ -1,5 +1,4 @@
 HELP.md
-#application.yml
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -36,6 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-target
-/src/main/resources/custom-props.properties
