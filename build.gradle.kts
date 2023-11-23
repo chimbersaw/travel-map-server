@@ -17,8 +17,6 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
@@ -26,16 +24,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.17")
     implementation("org.springframework.boot:spring-boot-starter-web:2.7.17")
     implementation("org.springframework.boot:spring-boot-starter-mail:2.7.17")
-
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.auth0:java-jwt:3.18.2")
-    implementation("com.sun.mail:javax.mail:1.6.2")
-    implementation("org.liquibase:liquibase-core")
 
-    runtimeOnly("org.postgresql:postgresql:42.3.8")
+    implementation("com.auth0:java-jwt:4.4.0")
+    implementation("org.liquibase:liquibase-core:4.25.0")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
+    runtimeOnly("org.postgresql:postgresql:42.7.0")
 }
 
 tasks.withType<KotlinCompile> {

@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import java.util.*
+import java.time.Instant
 import javax.servlet.FilterChain
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
@@ -26,7 +26,7 @@ class JWTAuthenticationFilter(
     private val jwtSecret: String by lazy {
         System.getenv("JWT_SECRET") ?: config?.secret ?: "default_JWT_secret"
     }
-    private val expirationTime = config?.expirationTime ?: 1209600000 // 2 weeks in ms
+    private val expirationTime = config?.expirationTime ?: 1209600000L // 2 weeks in ms
 
     override fun successfulAuthentication(
         request: HttpServletRequest?,
@@ -38,7 +38,7 @@ class JWTAuthenticationFilter(
             ?: throw IllegalArgumentException("authResult must be an instance of User")
         val token = JWT.create()
             .withSubject(user.username)
-            .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
+            .withExpiresAt(Instant.now().plusMillis(expirationTime))
             .sign(Algorithm.HMAC512(jwtSecret))
         userService.updateToken(user.username, token)
         val cookie = Cookie(AUTH_COOKIE, token)

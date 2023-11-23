@@ -3,7 +3,6 @@ package com.yandex.travelmap.security.jwt
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.yandex.travelmap.config.JWTConfig
-import com.yandex.travelmap.exception.UserNotFoundException
 import com.yandex.travelmap.security.service.UserDetailsServiceImpl
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -49,11 +48,10 @@ class JWTAuthorizationFilter(
     }
 
     private fun getAuthenticationToken(token: String): String? {
-
         // Parse and verify the provided token.
         return JWT.require(Algorithm.HMAC512(jwtSecret))
             .build()
             .verify(token)
-            .subject ?: return null
+            .subject
     }
 }
