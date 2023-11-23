@@ -8,10 +8,9 @@ import org.springframework.stereotype.Service
 class CitiesService(
     private val cityRepository: CityRepository
 ) {
-
     fun getCitiesByCountry(iso: String): List<CityResponse> {
         return cityRepository.findByCountryIso(iso)
-            .map { city -> CityResponse(iso, city.name) }
-            .sortedBy { response -> response.name }
+            .map { CityResponse(iso, it.name) }
+            .sortedBy { it.name }
     }
 }
