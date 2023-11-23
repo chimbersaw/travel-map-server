@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.8"
+    id("org.springframework.boot") version "2.7.17"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.liquibase.gradle") version "2.2.1"
-    kotlin("jvm") version "1.8.0"
-    kotlin("plugin.spring") version "1.8.0"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.spring") version "1.9.20"
 }
 
 group = "com.yandex"
@@ -22,10 +22,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("org.springframework.boot:spring-boot-starter-security:2.7.8")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.8")
-    implementation("org.springframework.boot:spring-boot-starter-web:2.7.8")
-    implementation("org.springframework.boot:spring-boot-starter-mail:2.7.8")
+    implementation("org.springframework.boot:spring-boot-starter-security:2.7.17")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.17")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.7.17")
+    implementation("org.springframework.boot:spring-boot-starter-mail:2.7.17")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.auth0:java-jwt:3.18.2")
