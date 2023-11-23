@@ -17,5 +17,5 @@ data class Country(
     val visitors: MutableSet<AppUser> = HashSet()
 
     @ManyToMany(mappedBy = "desiredCountries", cascade = [CascadeType.ALL])
-    val desireers: MutableSet<AppUser> = HashSet()
+    val desirers: MutableSet<AppUser> = HashSet()
 }

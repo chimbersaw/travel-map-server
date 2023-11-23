@@ -17,6 +17,7 @@ class RegistrationService(
         if (!isEmailValid) {
             throw EmailNotValidException()
         }
+
         userService.registerUser(registrationRequest)
     }
 }

@@ -11,7 +11,6 @@ import com.yandex.travelmap.repository.CountryRepository
 import com.yandex.travelmap.repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 import java.util.*
 
 @Service
@@ -34,47 +33,49 @@ class UserService(
     }
 
     fun addVisitedCountry(username: String, countryRequest: VisitedCountryRequest, isDesire: Boolean) {
-        return userRepository.findByUsername(username).orElseThrow {
+        val user = userRepository.findByUsername(username).orElseThrow {
             UserNotFoundException("No user with name $username exists")
-        }.let { user ->
-            countryRepository.findByIso(countryRequest.iso).orElseThrow {
-                CountryNotFoundException()
-            }.let { country ->
-                if (isDesire) {
-                    user.desiredCountries.add(country)
-                    country.desireers.add(user)
-                } else {
-                    user.visitedCountries.add(country)
-                    country.visitors.add(user)
-                    if (user.desiredCountries.contains(country)) {
-                        user.desiredCountries.remove(country)
-                        country.desireers.remove(user)
-                    }
-                }
-                userRepository.save(user)
-                countryRepository.save(country)
+        }
+
+        val country = countryRepository.findByIso(countryRequest.iso).orElseThrow {
+            CountryNotFoundException()
+        }
+
+        if (isDesire) {
+            user.desiredCountries.add(country)
+            country.desirers.add(user)
+        } else {
+            user.visitedCountries.add(country)
+            country.visitors.add(user)
+            if (user.desiredCountries.contains(country)) {
+                user.desiredCountries.remove(country)
+                country.desirers.remove(user)
             }
         }
+
+        userRepository.save(user)
+        countryRepository.save(country)
     }
 
     fun deleteVisitedCountry(username: String, countryRequest: VisitedCountryRequest, isDesire: Boolean) {
-        return userRepository.findByUsername(username).orElseThrow {
+        val user = userRepository.findByUsername(username).orElseThrow {
             UserNotFoundException("No user with name $username exists")
-        }.let { user ->
-            countryRepository.findByIso(countryRequest.iso).orElseThrow {
-                CountryNotFoundException()
-            }.let { country ->
-                if (isDesire) {
-                    user.desiredCountries.remove(country)
-                    country.desireers.remove(user)
-                } else {
-                    user.visitedCountries.remove(country)
-                    country.visitors.remove(user)
-                }
-                userRepository.save(user)
-                countryRepository.save(country)
-            }
         }
+
+        val country = countryRepository.findByIso(countryRequest.iso).orElseThrow {
+            CountryNotFoundException()
+        }
+
+        if (isDesire) {
+            user.desiredCountries.remove(country)
+            country.desirers.remove(user)
+        } else {
+            user.visitedCountries.remove(country)
+            country.visitors.remove(user)
+        }
+
+        userRepository.save(user)
+        countryRepository.save(country)
     }
 
     fun getVisitedCities(username: String, iso: String): List<CityResponse> {
@@ -103,18 +104,19 @@ class UserService(
     }
 
     fun deleteVisitedCity(username: String, cityRequest: VisitedCityRequest) {
-        return userRepository.findByUsername(username).orElseThrow {
+        val user = userRepository.findByUsername(username).orElseThrow {
             UserNotFoundException("No user with name $username exists")
-        }.let { user ->
-            cityRepository.findByNameIgnoreCaseAndCountryIso(cityRequest.name, cityRequest.iso).orElseThrow {
-                CityNotFoundException()
-            }.let { city ->
-                user.visitedCities.remove(city)
-                city.visitors.remove(user)
-                userRepository.save(user)
-                cityRepository.save(city)
-            }
         }
+
+        val city = cityRepository.findByNameIgnoreCaseAndCountryIso(cityRequest.name, cityRequest.iso).orElseThrow {
+            CityNotFoundException()
+        }
+
+        user.visitedCities.remove(city)
+        city.visitors.remove(user)
+
+        userRepository.save(user)
+        cityRepository.save(city)
     }
 
     fun registerUser(registrationRequest: RegistrationRequest) {
@@ -122,16 +124,19 @@ class UserService(
         if (emailExists) {
             throw IllegalStateException("User with this email already exists")
         }
+
         val usernameExists = userRepository.findByUsername(registrationRequest.username).isPresent
         if (usernameExists) {
             throw IllegalStateException("User with this name already exists")
         }
+
         val encodedPassword: String = passwordEncoder.encode(registrationRequest.password)
         val appUser = AppUser(
             email = registrationRequest.email,
             username = registrationRequest.username,
             password = encodedPassword
         )
+
         userRepository.save(appUser)
     }
 
@@ -300,30 +305,32 @@ class UserService(
     }
 
     fun getUserStats(username: String): UserStatsResponse {
-        userRepository.findByUsername(username).orElseThrow {
+        val user = userRepository.findByUsername(username).orElseThrow {
             UserNotFoundException("No user with name $username exists")
-        }.let { user ->
-            val cities = user.visitedCities
-            val response = UserStatsResponse(
-                username = username,
-                countriesNumber = user.visitedCountries.size,
-                totalCitiesNumber = cities.size,
-                citiesStats = LinkedList(),
-                totalCommonCities = 0,
-                commonCountries = 0
-            )
-            countryRepository.findAll().filter { country -> user.visitedCountries.contains(country) }
-                .forEach { country ->
-                    val citiesNumber = cities.filter { city -> city.country == country }.toList().size
-                    response.citiesStats.add(
-                        CitiesStatistic(
-                            iso = country.iso,
-                            name = country.name,
-                            citiesNumber = citiesNumber
-                        )
-                    )
-                }
-            return response
         }
+
+        val cities = user.visitedCities
+        val response = UserStatsResponse(
+            username = username,
+            countriesNumber = user.visitedCountries.size,
+            totalCitiesNumber = cities.size,
+            citiesStats = LinkedList(),
+            totalCommonCities = 0,
+            commonCountries = 0
+        )
+
+        countryRepository.findAll().filter { country -> user.visitedCountries.contains(country) }
+            .forEach { country ->
+                val citiesNumber = cities.filter { city -> city.country == country }.toList().size
+                response.citiesStats.add(
+                    CitiesStatistic(
+                        iso = country.iso,
+                        name = country.name,
+                        citiesNumber = citiesNumber
+                    )
+                )
+            }
+
+        return response
     }
 }
