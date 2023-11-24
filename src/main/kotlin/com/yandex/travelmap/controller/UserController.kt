@@ -6,11 +6,10 @@ import com.yandex.travelmap.model.AppUser
 import com.yandex.travelmap.repository.UserRepository
 import com.yandex.travelmap.service.FriendService
 import com.yandex.travelmap.service.UserService
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import com.yandex.travelmap.util.handleExceptions
+import com.yandex.travelmap.util.handleExceptionsResponse
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/user")
@@ -77,13 +76,8 @@ class UserController(
     }
 
     @PostMapping("/friends/remove")
-    fun removeFromFriends(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            friendService.removeFriend(currentUser, request.friendName)
-            ResponseEntity(HttpStatus.OK)
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun removeFromFriends(@RequestBody request: FriendRequest) = handleExceptions {
+        friendService.removeFriend(currentUser, request.friendName)
     }
 
     @PostMapping("/friends/request")
@@ -92,43 +86,23 @@ class UserController(
     }
 
     @PostMapping("/friends/request/send")
-    fun sendFriendRequest(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            friendService.sendFriendRequest(currentUser, request.friendName)
-            ResponseEntity(HttpStatus.OK)
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun sendFriendRequest(@RequestBody request: FriendRequest) = handleExceptions {
+        friendService.sendFriendRequest(currentUser, request.friendName)
     }
 
     @PostMapping("/friends/request/cancel")
-    fun cancelFriendRequest(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            friendService.cancelFriendRequest(currentUser, request.friendName)
-            ResponseEntity(HttpStatus.OK)
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun cancelFriendRequest(@RequestBody request: FriendRequest) = handleExceptions {
+        friendService.cancelFriendRequest(currentUser, request.friendName)
     }
 
     @PostMapping("/friends/request/accept")
-    fun acceptFriendRequest(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            friendService.handleFriendRequest(currentUser, request.friendName, accept = true)
-            ResponseEntity(HttpStatus.OK)
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun acceptFriendRequest(@RequestBody request: FriendRequest) = handleExceptions {
+        friendService.handleFriendRequest(currentUser, request.friendName, accept = true)
     }
 
     @PostMapping("/friends/request/decline")
-    fun declineFriendRequest(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            friendService.handleFriendRequest(currentUser, request.friendName, accept = false)
-            ResponseEntity(HttpStatus.OK)
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun declineFriendRequest(@RequestBody request: FriendRequest) = handleExceptions {
+        friendService.handleFriendRequest(currentUser, request.friendName, accept = false)
     }
 
     @GetMapping("/friends")
@@ -137,87 +111,37 @@ class UserController(
     }
 
     @PostMapping("/friends/countries")
-    fun getFriendCountries(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            ResponseEntity(
-                friendService.getFriendCountries(currentUser, request.friendName, false),
-                HttpStatus.OK
-            )
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun getFriendCountries(@RequestBody request: FriendRequest) = handleExceptionsResponse {
+        friendService.getFriendCountries(currentUser, request.friendName, false)
     }
 
     @PostMapping("/friends/countries/desired")
-    fun getFriendDesiredCountries(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            ResponseEntity(
-                friendService.getFriendCountries(currentUser, request.friendName, true),
-                HttpStatus.OK
-            )
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun getFriendDesiredCountries(@RequestBody request: FriendRequest) = handleExceptionsResponse {
+        friendService.getFriendCountries(currentUser, request.friendName, true)
     }
 
     @PostMapping("/friends/countries/common")
-    fun getFriendCommonCountries(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            ResponseEntity(
-                friendService.getFriendCommonCountries(currentUser, request.friendName, false),
-                HttpStatus.OK
-            )
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun getFriendCommonCountries(@RequestBody request: FriendRequest) = handleExceptionsResponse {
+        friendService.getFriendCommonCountries(currentUser, request.friendName, false)
     }
 
     @PostMapping("/friends/countries/common/desired")
-    fun getFriendCommonDesiredCountries(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            ResponseEntity(
-                friendService.getFriendCommonCountries(currentUser, request.friendName, true),
-                HttpStatus.OK
-            )
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun getFriendCommonDesiredCountries(@RequestBody request: FriendRequest) = handleExceptionsResponse {
+        friendService.getFriendCommonCountries(currentUser, request.friendName, true)
     }
 
-
     @PostMapping("/friends/cities")
-    fun getFriendCities(@RequestBody request: FriendCitiesRequest): ResponseEntity<Any> {
-        return try {
-            ResponseEntity(
-                friendService.getFriendCities(currentUser, request.friendName, request.iso),
-                HttpStatus.OK
-            )
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun getFriendCities(@RequestBody request: FriendCitiesRequest) = handleExceptionsResponse {
+        friendService.getFriendCities(currentUser, request.friendName, request.iso)
     }
 
     @PostMapping("/friends/cities/common")
-    fun getFriendCommonCities(@RequestBody request: FriendCitiesRequest): ResponseEntity<Any> {
-        return try {
-            ResponseEntity(
-                friendService.getFriendCommonCities(currentUser, request.friendName, request.iso),
-                HttpStatus.OK
-            )
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun getFriendCommonCities(@RequestBody request: FriendCitiesRequest) = handleExceptionsResponse {
+        friendService.getFriendCommonCities(currentUser, request.friendName, request.iso)
     }
 
     @PostMapping("/friends/stats")
-    fun getFriendStats(@RequestBody request: FriendRequest): ResponseEntity<Any> {
-        return try {
-            ResponseEntity(
-                friendService.getFriendStats(currentUser, request.friendName),
-                HttpStatus.OK
-            )
-        } catch (e: ResponseStatusException) {
-            ResponseEntity(e.reason, e.status)
-        }
+    fun getFriendStats(@RequestBody request: FriendRequest) = handleExceptionsResponse {
+        friendService.getFriendStats(currentUser, request.friendName)
     }
 }

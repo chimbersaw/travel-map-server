@@ -6,30 +6,34 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "users")
-data class AppUser(
+class AppUser(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
 
     @Column(unique = true, nullable = false)
-    private var username: String = "",
+    private var username: String,
 
     @Column(nullable = false)
-    private var password: String = "",
+    private var password: String,
 
     @Column(unique = true, nullable = false)
-    private var email: String = "",
+    private var email: String,
 
     @Column(name = "non_expired", nullable = false)
     private val nonExpired: Boolean = true,
+
     @Column(name = "non_locked", nullable = false)
     private val nonLocked: Boolean = true,
+
     @Column(nullable = false)
     private var enabled: Boolean = true,
+
     @Column(name = "credentials_non_expired", nullable = false)
     private val credentialsNonExpired: Boolean = true,
+
     @Column(name = "token", nullable = true)
-    private var token: String? = null,
+    private var token: String? = null
 ) : UserDetails {
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(
@@ -93,12 +97,12 @@ data class AppUser(
     override fun isAccountNonLocked(): Boolean = nonLocked
     override fun isCredentialsNonExpired(): Boolean = credentialsNonExpired
 
-    override fun isEnabled(): Boolean = enabled
+    override fun isEnabled() = enabled
     fun setEnabled(status: Boolean) {
         this.enabled = status
     }
 
-    fun getToken(): String? = token
+    fun getToken() = token
     fun setToken(token: String?) {
         this.token = token
     }
