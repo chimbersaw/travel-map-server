@@ -7,7 +7,6 @@ import com.yandex.travelmap.security.jwt.AUTH_COOKIE
 import com.yandex.travelmap.security.jwt.JWTAuthenticationFilter
 import com.yandex.travelmap.security.jwt.JWTAuthorizationFilter
 import com.yandex.travelmap.security.service.UserDetailsServiceImpl
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -38,15 +37,11 @@ import javax.servlet.http.HttpServletResponse
 @EnableWebSecurity
 class WebSecurityConfig(
     private val userDetailsService: UserDetailsServiceImpl,
+    private val config: JWTConfig,
+    private val passwordEncoderConfig: PasswordEncoderConfig
 ) : WebSecurityConfigurerAdapter() {
-    @Autowired
-    val config: JWTConfig? = null
-
-    @Autowired
-    val passwordEncoderConfig: PasswordEncoderConfig? = null
-
     @Bean
-    fun authenticationFilter(): JWTAuthenticationFilter? {
+    fun authenticationFilter(): JWTAuthenticationFilter {
         val authenticationFilter = JWTAuthenticationFilter(authenticationManager(), config, userDetailsService)
         authenticationFilter.setRequiresAuthenticationRequestMatcher(AntPathRequestMatcher("/login", "POST"))
         authenticationFilter.setAuthenticationManager(authenticationManagerBean())
@@ -118,7 +113,7 @@ class WebSecurityConfig(
                     response?.writer?.println("You are logged out")
                     val cookie = request?.let { WebUtils.getCookie(it, AUTH_COOKIE) }
                     val jwtSecret: String by lazy {
-                        System.getenv("JWT_SECRET") ?: config?.secret ?: "default_JWT_secret"
+                        System.getenv("JWT_SECRET") ?: config.secret
                     }
                     if (cookie != null && cookie.value != null && cookie.value.trim().isNotEmpty()) {
                         val token = cookie.value
@@ -139,7 +134,7 @@ class WebSecurityConfig(
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoderConfig?.passwordEncoder())
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoderConfig.passwordEncoder())
     }
 
     @Configuration

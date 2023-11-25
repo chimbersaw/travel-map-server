@@ -18,8 +18,7 @@ class JWTAuthorizationFilter(
     authenticationManager: AuthenticationManager,
     private val config: JWTConfig?,
     private val userService: UserDetailsServiceImpl
-) :
-    BasicAuthenticationFilter(authenticationManager) {
+) : BasicAuthenticationFilter(authenticationManager) {
     private val jwtSecret: String by lazy {
         System.getenv("JWT_SECRET") ?: config?.secret ?: "default_JWT_secret"
     }

@@ -8,7 +8,7 @@ class JWTConfig {
         System.getenv("JWT_SECRET") ?: "default_JWT_secret"
     }
 
-    val expirationTime: Long by lazy {
-        System.getenv("JWT_EXPIRES")?.toLong() ?: 1209600000L
+    val expirationTimeMillis: Long by lazy {
+        System.getenv("JWT_EXPIRES")?.toLong() ?: 1209600000L // 2 weeks in ms
     }
 }
