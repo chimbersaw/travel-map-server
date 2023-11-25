@@ -93,11 +93,9 @@ class WebSecurityConfig(
                     response?.writer?.println("Failed to log in")
                 }
             }
-            authenticationFilter()?.let {
-                addFilterBefore<UsernamePasswordAuthenticationFilter>(
-                    it
-                )
-            }
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(
+                authenticationFilter()
+            )
             addFilterBefore<JWTAuthenticationFilter>(
                 JWTAuthorizationFilter(
                     authenticationManager(),

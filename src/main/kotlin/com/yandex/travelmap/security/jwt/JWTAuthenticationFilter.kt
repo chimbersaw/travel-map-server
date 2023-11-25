@@ -15,7 +15,7 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-const val AUTH_COOKIE = "AUTH_COOKIE"
+const val AUTH_COOKIE = "travelmap_auth"
 
 
 class JWTAuthenticationFilter(
@@ -31,6 +31,7 @@ class JWTAuthenticationFilter(
     ) {
         val user = authResult?.principal as? AppUser
             ?: throw IllegalArgumentException("authResult must be an instance of User")
+
         val token = JWT.create()
             .withSubject(user.username)
             .withExpiresAt(Instant.now().plusMillis(jwtConfig.expirationTimeMillis))
@@ -40,7 +41,7 @@ class JWTAuthenticationFilter(
         cookie.secure = true
         response.addCookie(cookie)
         val header = response.getHeader(HttpHeaders.SET_COOKIE)
-//        response.setHeader(HttpHeaders.SET_COOKIE, "$header; SameSite=None")
+        response.setHeader(HttpHeaders.SET_COOKIE, "$header; SameSite=None")
         chain.doFilter(request, response)
     }
 }
