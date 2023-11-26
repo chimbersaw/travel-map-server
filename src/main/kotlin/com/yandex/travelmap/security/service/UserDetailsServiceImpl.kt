@@ -19,9 +19,15 @@ class UserDetailsServiceImpl(private val userRepository: UserRepository) : UserD
         return userRepository.getUserOrThrow(username)
     }
 
-    fun updateToken(username: String, token: String?) {
+    fun updateToken(username: String, token: String) {
         val user = userRepository.getUserOrThrow(username)
         user.setToken(token)
+        userRepository.save(user)
+    }
+
+    fun removeToken(username: String) {
+        val user = userRepository.getUserOrThrow(username)
+        user.setToken(null)
         userRepository.save(user)
     }
 }

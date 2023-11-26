@@ -1,5 +1,7 @@
-ALTER TABLE cities DROP COLUMN latitude;
-ALTER TABLE cities DROP COLUMN longitude;
+ALTER TABLE cities
+    DROP COLUMN latitude;
+ALTER TABLE cities
+    DROP COLUMN longitude;
 
 INSERT INTO cities(name, country_code)
 VALUES ('Encamp', 'AD'),

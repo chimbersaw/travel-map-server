@@ -1,9 +1,5 @@
 package com.yandex.travelmap.security.jwt
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import com.auth0.jwt.exceptions.JWTVerificationException
-import com.yandex.travelmap.config.JWTConfig
 import com.yandex.travelmap.security.service.UserDetailsServiceImpl
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -16,13 +12,13 @@ import javax.servlet.http.HttpServletResponse
 
 class JWTAuthorizationFilter(
     authenticationManager: AuthenticationManager,
-    private val jwtConfig: JWTConfig,
+    private val jwtService: JWTService,
     private val userService: UserDetailsServiceImpl
 ) : BasicAuthenticationFilter(authenticationManager) {
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val cookie = WebUtils.getCookie(request, AUTH_COOKIE)
         val username = cookie?.let {
-            getAuthenticationSubject(it.value)
+            jwtService.getAuthenticationSubject(it.value)
         }
         if (username == null) {
             // User is not authenticated.
@@ -38,16 +34,5 @@ class JWTAuthorizationFilter(
         }
 
         chain.doFilter(request, response)
-    }
-
-    private fun getAuthenticationSubject(token: String): String? = try {
-        // Parse and verify the provided token.
-        JWT.require(Algorithm.HMAC512(jwtConfig.secret))
-            .build()
-            .verify(token)
-            .subject
-    } catch (e: JWTVerificationException) {
-        logger.debug(e.stackTraceToString())
-        null
     }
 }
