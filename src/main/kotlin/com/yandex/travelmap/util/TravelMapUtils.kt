@@ -9,7 +9,7 @@ fun handleExceptions(block: () -> Unit): ResponseEntity<String> {
         block()
         ResponseEntity(HttpStatus.OK)
     } catch (e: ResponseStatusException) {
-        ResponseEntity(e.reason, e.status)
+        ResponseEntity(e.reason, e.statusCode)
     }
 }
 
@@ -20,6 +20,6 @@ fun <R> handleExceptionsResponse(block: () -> R): ResponseEntity<Any> {
             HttpStatus.OK
         )
     } catch (e: ResponseStatusException) {
-        ResponseEntity(e.reason, e.status)
+        ResponseEntity(e.message, e.statusCode)
     }
 }

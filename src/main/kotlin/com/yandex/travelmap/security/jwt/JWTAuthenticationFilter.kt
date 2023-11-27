@@ -1,41 +1,41 @@
 package com.yandex.travelmap.security.jwt
 
-import com.yandex.travelmap.model.AppUser
-import com.yandex.travelmap.security.service.UserDetailsServiceImpl
-import org.springframework.http.HttpHeaders
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.core.Authentication
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import javax.servlet.FilterChain
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import com.yandex.travelmap.repository.UserRepository
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.stereotype.Component
+import org.springframework.web.filter.OncePerRequestFilter
+import org.springframework.web.util.WebUtils
 
 const val AUTH_COOKIE = "travelmap_auth"
 
-
+@Component
 class JWTAuthenticationFilter(
-    authenticationManager: AuthenticationManager,
     private val jwtService: JWTService,
-    private val userService: UserDetailsServiceImpl
-) : UsernamePasswordAuthenticationFilter(authenticationManager) {
-    override fun successfulAuthentication(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        chain: FilterChain,
-        authResult: Authentication
-    ) {
-        val user = authResult.principal as? AppUser
-            ?: throw IllegalArgumentException("authResult must be an instance of User")
+    private val userRepository: UserRepository
+) : OncePerRequestFilter() {
+    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
+        val cookie = WebUtils.getCookie(request, AUTH_COOKIE)
+        val username = cookie?.let {
+            jwtService.getAuthenticationSubject(it.value)
+        }
+        if (username == null) {
+            // User is not authenticated.
+            chain.doFilter(request, response)
+            return
+        }
 
-        val token = jwtService.createJwtToken(user.username)
-        userService.updateToken(user.username, token)
-
-        val cookie = Cookie(AUTH_COOKIE, token)
-        cookie.secure = true
-        response.addCookie(cookie)
-        val header = response.getHeader(HttpHeaders.SET_COOKIE)
-        response.setHeader(HttpHeaders.SET_COOKIE, "$header; SameSite=None")
+        val token = cookie.value
+        val savedToken = userRepository.getUserOrThrow(username).getToken()
+        if (token == savedToken) {
+            val auth = UsernamePasswordAuthenticationToken(username, null, emptyList())
+            auth.details = WebAuthenticationDetailsSource().buildDetails(request)
+            SecurityContextHolder.getContext().authentication = auth
+        }
 
         chain.doFilter(request, response)
     }

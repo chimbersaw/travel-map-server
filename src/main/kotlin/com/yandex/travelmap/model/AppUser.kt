@@ -1,8 +1,8 @@
 package com.yandex.travelmap.model
 
+import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import javax.persistence.*
 
 @Entity
 @Table(name = "users")
@@ -39,7 +39,7 @@ class AppUser(
     @JoinTable(
         name = "city_visit",
         joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "city_id")],
+        inverseJoinColumns = [JoinColumn(name = "city_id")]
     )
     val visitedCities: MutableSet<City> = HashSet()
 
