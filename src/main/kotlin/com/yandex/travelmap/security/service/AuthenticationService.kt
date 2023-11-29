@@ -10,7 +10,6 @@ import com.yandex.travelmap.security.jwt.JWTService
 import com.yandex.travelmap.util.EmailValidator
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -62,10 +61,12 @@ class AuthenticationService(
         val token = jwtService.createJwtToken(request.username)
         userDetailsService.updateToken(request.username, token)
 
-        val cookie = Cookie(AUTH_COOKIE, token)
-        cookie.secure = true
+        val cookie = Cookie(AUTH_COOKIE, token).apply {
+            secure = true
+            isHttpOnly = true
+            maxAge = jwtService.getJwtExpirationTimeSeconds().toInt()
+            setAttribute("SameSite", "Lax")
+        }
         response.addCookie(cookie)
-        val header = response.getHeader(HttpHeaders.SET_COOKIE)
-        response.setHeader(HttpHeaders.SET_COOKIE, "$header; SameSite=None")
     }
 }

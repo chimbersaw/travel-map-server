@@ -7,6 +7,7 @@ import com.yandex.travelmap.config.JWTConfig
 import org.apache.commons.logging.LogFactory
 import org.springframework.stereotype.Service
 import java.time.Instant
+import kotlin.time.Duration.Companion.milliseconds
 
 @Service
 class JWTService(private val jwtConfig: JWTConfig) {
@@ -31,4 +32,6 @@ class JWTService(private val jwtConfig: JWTConfig) {
             .withExpiresAt(Instant.now().plusMillis(jwtConfig.expirationTimeMillis))
             .sign(algorithm)
     }
+
+    fun getJwtExpirationTimeSeconds() = jwtConfig.expirationTimeMillis.milliseconds.inWholeSeconds
 }
