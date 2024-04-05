@@ -1,3 +1,3 @@
-# travel-map-server
+# Travel-map-server
 
 https://map.yaytsa.com/
