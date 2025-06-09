@@ -1,6 +1,7 @@
 package ru.chimchima.travelmap.security
 
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -27,11 +28,13 @@ class WebSecurityConfig(
     private val jwtAuthenticationFilter: JWTAuthenticationFilter,
     private val logoutService: LogoutService
 ) {
+    @Value("\${website.url}")
+    lateinit var frontEndUrl: String
+
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        val origin = System.getenv("WEBSITE_URL") ?: "http://localhost:3000"
-        configuration.allowedOrigins = listOf(origin)
+        configuration.allowedOrigins = listOf(frontEndUrl)
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
         configuration.allowedHeaders = listOf("authorization", "content-type", "x-auth-token")
         configuration.exposedHeaders = listOf("x-auth-token", "set-cookie")

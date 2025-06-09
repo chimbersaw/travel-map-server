@@ -1,0 +1,12 @@
+SERVER_PORT=8080
+
+JDBC_DATABASE_URL=jdbc:postgresql://localhost:5432/travel_map_db
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=postgres
+
+LIQUIBASE_ENABLED=true
+
+JWT_SECRET=some_secret_key
+JWT_EXPIRES=1209600000
+
+FRONTEND_URL=http://localhost:3000

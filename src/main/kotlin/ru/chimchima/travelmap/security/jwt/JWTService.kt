@@ -28,9 +28,9 @@ class JWTService(private val jwtConfig: ru.chimchima.travelmap.config.JWTConfig)
     fun createJwtToken(username: String): String {
         return JWT.create()
             .withSubject(username)
-            .withExpiresAt(Instant.now().plusMillis(jwtConfig.expirationTimeMillis))
+            .withExpiresAt(Instant.now().plusMillis(jwtConfig.expires))
             .sign(algorithm)
     }
 
-    fun getJwtExpirationTimeSeconds() = jwtConfig.expirationTimeMillis.milliseconds.inWholeSeconds
+    fun getJwtExpirationTimeSeconds() = jwtConfig.expires.milliseconds.inWholeSeconds
 }

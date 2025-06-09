@@ -1,14 +1,13 @@
 package ru.chimchima.travelmap.config
 
-import org.springframework.context.annotation.Configuration
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 
-@Configuration
-class JWTConfig {
-    val secret: String by lazy {
-        System.getenv("JWT_SECRET") ?: "default_JWT_secret"
-    }
+@Component
+class JWTConfig(
+    @Value("\${jwt.secret}")
+    val secret: String,
 
-    val expirationTimeMillis: Long by lazy {
-        System.getenv("JWT_EXPIRES")?.toLong() ?: 1209600000L // 2 weeks in ms
-    }
-}
+    @Value("\${jwt.expires}")
+    val expires: Long
+)
