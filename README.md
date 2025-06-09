@@ -12,6 +12,7 @@ https://yaytsa.com/
   (or [src/main/resources/local.properties.example](src/main/resources/local.properties.example)):
 
 ```
+SERVER_ADDRESS=127.0.0.1
 SERVER_PORT=8080
 
 JDBC_DATABASE_URL=xxx
