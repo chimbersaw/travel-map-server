@@ -6,6 +6,7 @@ https://yaytsa.com/
 
 * Install Java 17+ and make sure with `java -version`.
 * Run a `postgresql` database and make sure you can connect to it.
+* Create a database for the application (`travel_map_db` by default).
 * Create the `local.properties` file in `src/main/resources`.
 * Fill it according to the example below
   (or [src/main/resources/local.properties.example](src/main/resources/local.properties.example)):
