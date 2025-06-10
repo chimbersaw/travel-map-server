@@ -34,7 +34,7 @@ class WebSecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf(frontEndUrl)
+        configuration.allowedOriginPatterns = listOf(frontEndUrl)
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
         configuration.allowedHeaders = listOf("authorization", "content-type", "x-auth-token")
         configuration.exposedHeaders = listOf("x-auth-token", "set-cookie")
@@ -50,9 +50,9 @@ class WebSecurityConfig(
         http {
             csrf { disable() }
             cors { }
-            authorizeRequests {
-                authorize("/registration/confirm", permitAll)
-                authorize("/registration", permitAll)
+            authorizeHttpRequests {
+                authorize("/login", permitAll)
+                authorize("/register", permitAll)
                 authorize("/ping", permitAll)
                 authorize("/api/auth/**", permitAll)
                 authorize("/api/cities", permitAll)
