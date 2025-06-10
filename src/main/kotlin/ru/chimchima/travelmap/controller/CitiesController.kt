@@ -9,11 +9,11 @@ import ru.chimchima.travelmap.dto.CityResponse
 import ru.chimchima.travelmap.service.CitiesService
 
 @RestController
-@RequestMapping("/api/cities")
+@RequestMapping("/api/public")
 class CitiesController(
     private val citiesService: CitiesService
 ) {
-    @PostMapping
+    @PostMapping("/cities")
     fun getCitiesByCountry(@RequestBody request: CitiesByCountryListRequest): List<CityResponse> {
         return citiesService.getCitiesByCountry(request.iso)
     }

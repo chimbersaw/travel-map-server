@@ -51,11 +51,9 @@ class WebSecurityConfig(
             csrf { disable() }
             cors { }
             authorizeHttpRequests {
-                authorize("/login", permitAll)
-                authorize("/register", permitAll)
-                authorize("/ping", permitAll)
+                authorize("/api/ping", permitAll)
                 authorize("/api/auth/**", permitAll)
-                authorize("/api/cities", permitAll)
+                authorize("/api/public/**", permitAll)
                 authorize("/api/**", authenticated)
             }
 
@@ -68,7 +66,7 @@ class WebSecurityConfig(
             )
 
             logout {
-                logoutUrl = "/logout"
+                logoutUrl = "/api/logout"
                 deleteCookies(AUTH_COOKIE)
                 addLogoutHandler(logoutService)
                 logoutSuccessHandler = LogoutSuccessHandler { _, response, _ ->

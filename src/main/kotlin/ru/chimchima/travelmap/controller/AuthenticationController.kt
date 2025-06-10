@@ -14,7 +14,7 @@ import ru.chimchima.travelmap.exception.EmailNotValidException
 import ru.chimchima.travelmap.security.service.AuthenticationService
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/auth")
 class AuthenticationController(
     private val authenticationService: AuthenticationService
 ) {

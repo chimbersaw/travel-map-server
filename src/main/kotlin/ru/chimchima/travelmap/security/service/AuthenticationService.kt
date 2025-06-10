@@ -65,6 +65,7 @@ class AuthenticationService(
             secure = true
             isHttpOnly = true
             maxAge = jwtService.getJwtExpirationTimeSeconds().toInt()
+            path = "/api"
             setAttribute("SameSite", "Lax")
         }
         response.addCookie(cookie)
