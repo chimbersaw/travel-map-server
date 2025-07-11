@@ -27,6 +27,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    implementation("ch.qos.logback.access:logback-access-tomcat:2.0.6")
+    implementation("dev.akkinoc.spring.boot:logback-access-spring-boot-starter:4.7.0")
+
     implementation("com.auth0:java-jwt:4.5.0")
     implementation("org.liquibase:liquibase-core:4.31.1")
     runtimeOnly("org.postgresql:postgresql:42.7.5")
