@@ -2,7 +2,7 @@
 <configuration>
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%h %l %u %t "%r" %s %b "%i{Referer}"</pattern>
+            <pattern>%a %u %t "%r" %s %b "%i{Referer}"</pattern>
         </encoder>
     </appender>
     <appender-ref ref="console"/>
