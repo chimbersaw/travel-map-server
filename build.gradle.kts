@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    kotlin("plugin.jpa") version "2.2.21"
-    id("org.springframework.boot") version "3.5.8"
+    kotlin("jvm") version "2.3.21"
+    kotlin("plugin.spring") version "2.3.21"
+    kotlin("plugin.jpa") version "2.3.21"
+    id("org.springframework.boot") version "3.5.14"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -27,12 +27,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-    implementation("ch.qos.logback.access:logback-access-tomcat:2.0.7")
-    implementation("dev.akkinoc.spring.boot:logback-access-spring-boot-starter:4.7.0")
+    implementation("ch.qos.logback.access:logback-access-tomcat:2.0.12")
+    implementation("dev.akkinoc.spring.boot:logback-access-spring-boot-starter:4.7.1")
 
-    implementation("com.auth0:java-jwt:4.5.0")
+    implementation("com.auth0:java-jwt:4.5.2")
     implementation("org.liquibase:liquibase-core:4.33.0")
-    runtimeOnly("org.postgresql:postgresql:42.7.8")
+    runtimeOnly("org.postgresql:postgresql:42.7.11")
 }
 
 tasks.withType<KotlinCompile> {
